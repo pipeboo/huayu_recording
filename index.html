@@ -71,7 +71,7 @@
 
       const formData = new FormData();
       formData.append("file", audioBlob);
-      formData.append("upload_preset", "huayu_recording");
+      formData.append("upload_preset", "huayu-recording");
 
       const res = await fetch("https://api.cloudinary.com/v1_1/dcqb2xofg/video/upload", {
         method: "POST",
