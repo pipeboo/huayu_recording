@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
   try {
     const wixRes = await fetch(
-      'https://kps0980.wixsite.com/_functions/updateRecording',
+      'https://kps0980.wixsite.com/huayu-dryflower/_functions/updateRecording',
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
