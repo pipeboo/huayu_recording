@@ -1,9 +1,23 @@
+export const config = {
+  api: {
+    bodyParser: true,
+  },
+};
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, error: 'Method Not Allowed' });
   }
 
-  const { code, audioUrl } = req.body;
+  let code, audioUrl;
+
+  try {
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    code = body.code;
+    audioUrl = body.audioUrl;
+  } catch (err) {
+    return res.status(400).json({ success: false, error: '無法解析 JSON' });
+  }
 
   if (!code || !audioUrl) {
     return res.status(400).json({ success: false, error: '缺少必要欄位' });
