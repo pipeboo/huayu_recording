@@ -71,7 +71,7 @@
 
       const formData = new FormData();
       formData.append("file", audioBlob);
-      formData.append("upload_preset", "huayu-recording");
+      formData.append("upload_preset", "huayu_recording"); // 確認這裡用底線
 
       const res = await fetch("https://api.cloudinary.com/v1_1/dcqb2xofg/video/upload", {
         method: "POST",
@@ -81,7 +81,7 @@
       const data = await res.json();
 
       try {
-        const proxyRes = await fetch("https://huayu-recording.vercel.app/api/updateWixRecording.js", {
+        const proxyRes = await fetch("https://huayu-recording.vercel.app/api/updateWixRecording", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ code: code, audioUrl: data.secure_url })
