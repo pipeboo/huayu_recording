@@ -98,9 +98,8 @@
       });
 
       const data = await res.json();
-      console.log("Cloudinary 音訊連結：", data.secure_url);
-      document.getElementById("status").innerText = "✅ 上傳成功！即將跳轉...";
-      // 將 audioUrl 傳給 WIX 後台
+
+      // 回傳到 WIX CMS
       await fetch("https://kps0980.wixsite.com/_functions/updateRecording", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -109,7 +108,9 @@
           audioUrl: data.secure_url
         })
       });
-      // 跳轉回 WIX 播放頁面（帶入代碼）
+
+      // 提示並跳轉
+      document.getElementById("status").innerText = "✅ 上傳成功！即將跳轉...";
       setTimeout(() => {
         window.location.href = `https://kps0980.wixsite.com/huayu-dryflower/playback-entry?code=${code}`;
       }, 2000);
