@@ -86,41 +86,61 @@
 
     document.getElementById("uploadBtn").onclick = async () => {
       if (!audioBlob) return;
-      document.getElementById("status").innerText = "⬆️ 上傳中...";
+      const status = document.getElementById("status");
+      status.innerText = "⬆️ 上傳中...";
 
+      // 1) 上傳到 Cloudinary
       const formData = new FormData();
       formData.append("file", audioBlob);
-      formData.append("upload_preset", "huayu_recording"); // 確認這裡用底線
+      formData.append("upload_preset", "huayu_recording");
 
-      const res = await fetch("https://api.cloudinary.com/v1_1/dcqb2xofg/video/upload", {
-        method: "POST",
-        body: formData
-      });
+      const cloudRes = await fetch(
+        "https://api.cloudinary.com/v1_1/dcqb2xofg/video/upload",
+        { method: "POST", body: formData }
+      );
+      const cloudData = await cloudRes.json();             // ← 只在這裡呼叫一次 .json()
+      if (!cloudRes.ok) {
+        console.error("Cloudinary 上傳錯誤", cloudData);
+        status.innerText = "❌ Cloudinary 上傳失敗";
+        return;
+      }
 
-      const data = await res.json();
-      const cloudRes = await res.json();
-      console.log("Cloudinary 回传 URL:", cloudRes.secure_url);
-      const audioUrl = cloudRes.secure_url;  // 一定要在这里声明
+      const audioUrl = cloudData.secure_url;                // ← 取到要傳回 Wix 的 URL
+      console.log("拿到的 audioUrl:", audioUrl);
 
+      // 2) Proxy 到你的 Vercel endpoint
       try {
-        await fetch("https://huayu-recording.vercel.app/api/updateWixRecording", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ code, audioUrl })
-        });
+        const proxyRes = await fetch(
+          "https://huayu-recording.vercel.app/api/updateWixRecording",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code, audioUrl })
+          }
+        );
 
+        // **在這裡只呼叫一次 .json()**
         const result = await proxyRes.json();
-        if (!result.success) throw new Error(result.error || "WIX 更新失敗");
+        console.log("proxy 回傳結果:", result);
 
-        document.getElementById("status").innerText = "✅ 上傳成功！即將跳轉...";
+        if (!proxyRes.ok || !result.success) {
+          throw new Error(result.error || "WIX 更新失敗");
+        }
+
+        status.innerText = "✅ 上傳成功！即將跳轉...";
         setTimeout(() => {
-          window.location.href = `https://kps0980.wixsite.com/huayu-dryflower/playback-entry?code=${code}`;
-        }, 2000);
+          window.location.href =
+            `https://kps0980.wixsite.com/huayu-dryflower/playback-entry?code=${code}`;
+        }, 1500);
+
       } catch (err) {
         console.error("WIX 更新失敗", err);
-        document.getElementById("status").innerText = "❌ 音訊上傳成功，但寫入資料失敗，請聯絡管理員";
+        status.innerText =
+          "❌ 音訊上傳成功，但寫入資料失敗，請聯絡管理員";
       }
     };
+
+
   </script>
 </body>
 
