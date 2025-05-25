@@ -98,6 +98,9 @@
       });
 
       const data = await res.json();
+      const cloudRes = await res.json();
+      console.log("Cloudinary 回传 URL:", cloudRes.secure_url);
+      const audioUrl = cloudRes.secure_url;  // 一定要在这里声明
 
       try {
         await fetch("https://huayu-recording.vercel.app/api/updateWixRecording", {
