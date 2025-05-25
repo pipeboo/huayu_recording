@@ -100,7 +100,7 @@
       const data = await res.json();
 
       // 回傳到 WIX CMS
-      await fetch("https://kps0980.wixsite.com/_functions/updateRecording", {
+      await fetch("https://huayu-recording.vercel.app/api/updateWixRecording", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
