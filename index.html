@@ -1,16 +1,35 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Huayu 錄音頁面</title>
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 2rem; }
-    button { margin: 1rem; padding: 1rem 2rem; font-size: 1.2rem; }
-    audio { margin-top: 2rem; }
-    #status { margin-top: 1rem; font-weight: bold; color: #555; }
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    button {
+      margin: 1rem;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+    }
+
+    audio {
+      margin-top: 2rem;
+    }
+
+    #status {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #555;
+    }
   </style>
 </head>
+
 <body>
   <h1>Huayu 錄音頁面</h1>
   <p id="codeDisplay"></p>
@@ -81,10 +100,10 @@
       const data = await res.json();
 
       try {
-        const proxyRes = await fetch("https://huayu-recording.vercel.app/api/updateWixRecording", {
+        await fetch("https://huayu-recording.vercel.app/api/updateWixRecording", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ code: code, audioUrl: data.secure_url })
+          body: JSON.stringify({ code, audioUrl })
         });
 
         const result = await proxyRes.json();
@@ -101,4 +120,5 @@
     };
   </script>
 </body>
+
 </html>
