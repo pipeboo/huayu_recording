@@ -81,7 +81,7 @@
       const data = await res.json();
 
       try {
-        const proxyRes = await fetch("https://huayu-recording.vercel.app/api/updateWixRecording", {
+        const proxyRes = await fetch("https://kps0980.wixsite.com/huayu-dryflower/_functions/updateRecording", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ code: code, audioUrl: data.secure_url })
