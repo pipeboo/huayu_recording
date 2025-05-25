@@ -1,16 +1,35 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Huayu 錄音頁面</title>
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 2rem; }
-    button { margin: 1rem; padding: 1rem 2rem; font-size: 1.2rem; }
-    audio { margin-top: 2rem; }
-    #status { margin-top: 1rem; font-weight: bold; color: #555; }
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    button {
+      margin: 1rem;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+    }
+
+    audio {
+      margin-top: 2rem;
+    }
+
+    #status {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #555;
+    }
   </style>
 </head>
+
 <body>
   <h1>Huayu 錄音頁面</h1>
   <p id="codeDisplay"></p>
@@ -81,7 +100,15 @@
       const data = await res.json();
       console.log("Cloudinary 音訊連結：", data.secure_url);
       document.getElementById("status").innerText = "✅ 上傳成功！即將跳轉...";
-
+      // 將 audioUrl 傳給 WIX 後台
+      await fetch("https://kps0980.wixsite.com/_functions/updateRecording", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code: code,
+          audioUrl: data.secure_url
+        })
+      });
       // 跳轉回 WIX 播放頁面（帶入代碼）
       setTimeout(() => {
         window.location.href = `https://kps0980.wixsite.com/huayu-dryflower/playback-entry?code=${code}`;
@@ -89,4 +116,5 @@
     };
   </script>
 </body>
+
 </html>
