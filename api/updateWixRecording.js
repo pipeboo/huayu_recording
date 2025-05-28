@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const wixResponse = await fetch('https://kps0980.wixsite.com/_functions/updateRecording', {
+    const wixResponse = await fetch('https://kps0980.wixsite.com/huayu-dryflower/_functions/updateRecording', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
