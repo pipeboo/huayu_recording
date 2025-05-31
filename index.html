@@ -1,45 +1,87 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <title>錄音器 - 語音卡片</title>
+  <meta charset="UTF-8" />
+  <title>語音卡片錄音</title>
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 2rem; }
-    button { padding: 1rem 2rem; font-size: 1.2rem; margin: 1rem; }
-    audio { margin-top: 2rem; display: block; }
-    #status { margin-top: 1rem; font-weight: bold; }
+    body {
+      font-family: "Noto Sans TC", sans-serif;
+      background: #f9f7fb;
+      color: #333;
+      text-align: center;
+      padding: 2rem;
+    }
+    .logo {
+      width: 180px;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 2rem;
+      color: #5f4b8b;
+      margin-bottom: 1rem;
+    }
+    #codeDisplay {
+      margin-bottom: 2rem;
+      font-weight: bold;
+    }
+    button {
+      padding: 0.8rem 1.6rem;
+      font-size: 1.1rem;
+      margin: 0.5rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #c6b3e6;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #a18ac9;
+    }
+    button:disabled {
+      background-color: #e0dceb;
+      cursor: not-allowed;
+    }
     audio {
-    margin-top: 2rem;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 300px;
-  }
+      margin-top: 1.5rem;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #status {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
+  <img src="logo.png" alt="品牌LOGO" class="logo" />
   <h1>語音卡片錄音</h1>
-  <p id="codeDisplay">正在載入代碼...</p>
+  <p id="codeDisplay">正在載入識別碼...</p>
   <button id="startBtn">開始錄音</button>
   <button id="stopBtn" disabled>停止錄音</button>
+  <button id="redoBtn" disabled>重新錄音</button>
+  <button id="uploadBtn" disabled>確認上傳</button>
   <audio id="audioPlayback" controls></audio>
   <p id="status">尚未錄音</p>
 
   <script>
-    const startBtn = document.getElementById('startBtn');
-    const stopBtn = document.getElementById('stopBtn');
-    const audioPlayback = document.getElementById('audioPlayback');
-    const statusText = document.getElementById('status');
-    const codeDisplay = document.getElementById('codeDisplay');
+    const startBtn = document.getElementById("startBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const redoBtn = document.getElementById("redoBtn");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const audioPlayback = document.getElementById("audioPlayback");
+    const statusText = document.getElementById("status");
+    const codeDisplay = document.getElementById("codeDisplay");
 
     let mediaRecorder;
     let audioChunks = [];
+    let audioBlob;
 
-    // Get code from URL
     const urlParams = new URLSearchParams(window.location.search);
-    const code = new URLSearchParams(window.location.search).get('code');
+    const code = urlParams.get("code");
     if (!code) {
-      codeDisplay.innerText = "錯誤：找不到識別代碼";
+      codeDisplay.innerText = "❌ 找不到識別碼";
       startBtn.disabled = true;
     } else {
       codeDisplay.innerText = "識別碼：" + code;
@@ -54,45 +96,65 @@
         audioChunks.push(event.data);
       };
 
-      mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-        const formData = new FormData();
-        formData.append('file', audioBlob);
-        formData.append('upload_preset', 'huayu_recording');  // Replace with your preset
-        formData.append('cloud_name', 'dcqb2xofg');         // Replace with your cloud name
-
-        statusText.innerText = "上傳中...";
-
-        // Upload to Cloudinary
-        const uploadResp = await fetch('https://api.cloudinary.com/v1_1/dcqb2xofg/video/upload', {
-          method: 'POST',
-          body: formData
-        });
-        const uploadResult = await uploadResp.json();
-        const audioUrl = uploadResult.secure_url;
-
-        // Send to Vercel Proxy
-        await fetch('https://huayu-recording.vercel.app/api/updateWixRecording', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ code, audioUrl })
-        });
-
-        audioPlayback.src = audioUrl;
-        statusText.innerText = "上傳完成！錄音連結已綁定。";
+      mediaRecorder.onstop = () => {
+        audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+        audioPlayback.src = URL.createObjectURL(audioBlob);
+        redoBtn.disabled = false;
+        uploadBtn.disabled = false;
+        statusText.innerText = "✅ 錄音完成，請確認後上傳";
       };
 
       mediaRecorder.start();
-      statusText.innerText = "錄音中...";
+      statusText.innerText = "🎙️ 錄音中...";
       startBtn.disabled = true;
       stopBtn.disabled = false;
+      redoBtn.disabled = true;
+      uploadBtn.disabled = true;
     };
 
     stopBtn.onclick = () => {
       mediaRecorder.stop();
       stopBtn.disabled = true;
+    };
+
+    redoBtn.onclick = () => {
+      audioPlayback.src = "";
+      statusText.innerText = "🔄 請重新錄音";
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+      redoBtn.disabled = true;
+      uploadBtn.disabled = true;
+    };
+
+    uploadBtn.onclick = async () => {
+      if (!audioBlob) return;
+
+      const formData = new FormData();
+      formData.append("file", audioBlob);
+      formData.append("upload_preset", "huayu_recording"); // ← 改這裡
+      formData.append("cloud_name", "dcqb2xofg"); // ← 改這裡
+
+      statusText.innerText = "☁️ 上傳中...";
+
+      const uploadResp = await fetch("https://https.cloudinary.com/v1_1/YOUR_CLOUD_NAME/video/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const uploadResult = await uploadResp.json();
+      const audioUrl = uploadResult.secure_url;
+
+      await fetch("https://huayu-recording.vercel.app/api/updateWixRecording", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ code, audioUrl })
+      });
+
+      statusText.innerText = "✅ 上傳完成！錄音連結已綁定。";
+      redoBtn.disabled = true;
+      uploadBtn.disabled = true;
     };
   </script>
 </body>
