@@ -139,6 +139,9 @@
     const code = urlParams.get("code");
     if (!code) {
       codeDisplay.innerText = "❌ 找不到識別碼";
+      stopBtn.disabled = true;
+      redoBtn.disabled = true;
+      uploadBtn.disabled = true;
       startBtn.disabled = true;
     } else {
       codeDisplay.innerText = "識別碼：" + code;
@@ -183,18 +186,18 @@
       uploadBtn.disabled = true;
     };
 
-    if (!recipientName) {
-      statusText.innerText = "⚠️ 請先輸入對象姓名或暱稱";
-      return;
-    }
-
     uploadBtn.onclick = async () => {
-      if (!audioBlob)
-      {
-        return statusText.innerText = "⚠️ 尚未錄音，請先錄音後再上傳。";
-      };
-
       const recipientName = document.getElementById("recipientName").value;
+
+      if (!recipientName) {
+        statusText.innerText = "⚠️ 請先輸入對象姓名或暱稱";
+        return;
+      }
+
+      if (!audioBlob) {
+        statusText.innerText = "⚠️ 尚未錄音，請先錄音後再上傳。";
+        return;
+      }
 
       const formData = new FormData();
       formData.append("file", audioBlob);
@@ -223,6 +226,7 @@
       redoBtn.disabled = true;
       uploadBtn.disabled = true;
     };
+
 
 
     document.getElementById("toPlayback").href = `https://kps0980.wixsite.com/huayu-dryflower/record?code=${code}`;
