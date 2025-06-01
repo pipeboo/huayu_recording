@@ -101,7 +101,13 @@
     <img src="logo.png" alt="品牌LOGO" class="logo" />
     <h1>語音卡片錄音</h1>
     <p id="codeDisplay">正在載入識別碼...</p>
-
+    <div style="margin-bottom: 1.5rem;">
+      <label for="recipientName" style="display:block; margin-bottom: 0.5rem; color:#5f4b8b;">
+        請輸入您要贈與卡片的對象姓名或暱稱
+      </label>
+      <input type="text" id="recipientName" placeholder="例如：媽媽、小明、最好的朋友"
+        style="padding:0.6rem; font-size:1rem; border-radius:6px; border:1px solid #ccc; width:80%; max-width:320px;">
+    </div>
     <button id="startBtn">開始錄音</button>
     <button id="stopBtn" disabled>停止錄音</button>
     <button id="redoBtn" disabled>重新錄音</button>
@@ -200,7 +206,7 @@
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ code, audioUrl })
+        body: JSON.stringify({ code, audioUrl,name: recipientName })
       });
 
       statusText.innerText = "✅ 上傳完成！錄音連結已綁定。";
