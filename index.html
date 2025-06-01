@@ -183,6 +183,11 @@
       uploadBtn.disabled = true;
     };
 
+    if (!recipientName) {
+      statusText.innerText = "⚠️ 請先輸入對象姓名或暱稱";
+      return;
+    }
+
     uploadBtn.onclick = async () => {
       if (!audioBlob) return;
 
@@ -198,6 +203,7 @@
         body: formData,
       });
 
+      const recipientName = document.getElementById("recipientName").value.trim();
       const uploadResult = await uploadResp.json();
       const audioUrl = uploadResult.secure_url;
 
@@ -206,7 +212,7 @@
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ code, audioUrl,name: recipientName })
+        body: JSON.stringify({ code, audioUrl, name: recipientName })
       });
 
       statusText.innerText = "✅ 上傳完成！錄音連結已綁定。";
