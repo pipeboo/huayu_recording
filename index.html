@@ -93,6 +93,51 @@
     .link-btn:hover {
       color: #a18ac9;
     }
+
+    @media screen and (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 95vw;
+        padding: 1.5rem 1rem;
+        box-sizing: border-box;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      #codeDisplay,
+      #status,
+      label,
+      .link-btn,
+      button {
+        font-size: 1.1rem;
+      }
+
+      input[type="text"] {
+        font-size: 1.1rem !important;
+        width: 90% !important;
+      }
+
+      button {
+        padding: 0.6rem 1.2rem;
+        font-size: 1rem;
+        margin: 0.3rem;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      audio {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 
@@ -219,7 +264,7 @@
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ code, audioUrl,recipientName })
+        body: JSON.stringify({ code, audioUrl, recipientName })
       });
 
       statusText.innerText = "✅ 上傳完成！錄音連結已綁定。";
