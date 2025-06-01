@@ -95,7 +95,14 @@
     }
 
     @media screen and (max-width: 768px) {
-    
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 1rem;
+      }
+
       .container {
         width: 100%;
         max-width: 95vw;
@@ -133,13 +140,6 @@
 
       audio {
         width: 100%;
-      }
-      body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        padding: 1rem;
       }
     }
   </style>
