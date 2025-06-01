@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
   <meta charset="UTF-8" />
   <title>語音卡片錄音</title>
   <style>
     body {
-       min-height: 100vh; /* 讓背景撐滿整個視窗高度 */
+      min-height: 100vh;
+      /* 讓背景撐滿整個視窗高度 */
       font-family: "Noto Sans TC", sans-serif;
       margin: 0;
       padding: 2rem;
@@ -73,8 +75,27 @@
       font-weight: bold;
       color: #444;
     }
+
+    .action-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+
+    .link-btn {
+      font-size: 1rem;
+      color: #5f4b8b;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      transition: color 0.3s ease;
+    }
+
+    .link-btn:hover {
+      color: #a18ac9;
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
     <img src="logo.png" alt="品牌LOGO" class="logo" />
@@ -88,6 +109,11 @@
 
     <audio id="audioPlayback" controls></audio>
     <p id="status">尚未錄音</p>
+
+    <div class="action-buttons">
+      <a href="https://kps0980.wixsite.com/huayu-dryflower" class="link-btn">← 回首頁</a>
+      <a id="toPlayback" href="#" class="link-btn">前往播放介面 →</a>
+    </div>
   </div>
 
   <script>
@@ -181,6 +207,9 @@
       redoBtn.disabled = true;
       uploadBtn.disabled = true;
     };
+
+    document.getElementById("toPlayback").href = `https://kps0980.wixsite.com/huayu-dryflower/playback?code=${code}`;
   </script>
 </body>
+
 </html>
