@@ -219,7 +219,7 @@
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ code, audioUrl, name: recipientName })
+        body: JSON.stringify({ code, audioUrl,recipientName })
       });
 
       statusText.innerText = "✅ 上傳完成！錄音連結已綁定。";
