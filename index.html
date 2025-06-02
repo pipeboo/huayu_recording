@@ -6,29 +6,25 @@
   <title>語音卡片錄音</title>
   <style>
     body {
+      min-height: 100vh;
+      /* 讓背景撐滿整個視窗高度 */
       font-family: "Noto Sans TC", sans-serif;
       margin: 0;
       padding: 2rem;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      text-align: center;
       background: url('bg.png') no-repeat center center fixed;
       background-size: cover;
       color: #333;
       backdrop-filter: blur(10px) brightness(1.05);
-      box-sizing: border-box;
-      overflow-x: hidden;
     }
 
     .container {
       background-color: rgba(255, 255, 255, 0.85);
-      width: 100%;
       max-width: 600px;
+      margin: auto;
       padding: 2rem;
       border-radius: 1rem;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      box-sizing: border-box;
     }
 
     .logo {
@@ -37,39 +33,21 @@
     }
 
     h1 {
-      font-size: 2.2rem;
+      font-size: 2rem;
       color: #5f4b8b;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
     }
 
     #codeDisplay {
       margin-bottom: 1.5rem;
       font-weight: bold;
       color: #666;
-      font-size: 1.2rem;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: #5f4b8b;
-      font-size: 1.1rem;
-    }
-
-    input[type="text"] {
-      padding: 0.6rem;
-      font-size: 1.1rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      width: 100%;
-      max-width: 320px;
-      box-sizing: border-box;
     }
 
     button {
       padding: 0.8rem 1.6rem;
       font-size: 1.1rem;
-      margin: 0.4rem 0.2rem;
+      margin: 0.4rem;
       border: none;
       border-radius: 8px;
       background-color: #c6b3e6;
@@ -90,27 +68,22 @@
     audio {
       margin-top: 1.5rem;
       width: 100%;
-      height: 44px;
-      border-radius: 8px;
     }
 
     #status {
       margin-top: 1rem;
       font-weight: bold;
-      font-size: 1.1rem;
       color: #444;
     }
 
     .action-buttons {
       display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
-      gap: 0.8rem;
       margin-top: 2rem;
     }
 
     .link-btn {
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: #5f4b8b;
       text-decoration: none;
       padding: 0.5rem 1rem;
@@ -121,9 +94,13 @@
       color: #a18ac9;
     }
 
-    /* 手機尺寸優化 */
-    @media screen and (max-width: 480px) {
+    @media screen and (max-width: 768px) {
+      body {
+        padding: 1.5rem 1rem;
+      }
+
       .container {
+        width: 100%;
         padding: 1.5rem 1rem;
         border-radius: 0.75rem;
       }
@@ -137,22 +114,48 @@
       label,
       .link-btn,
       button {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
       }
 
       input[type="text"] {
-        font-size: 1.1rem;
-        width: 100%;
+        font-size: 1.2rem;
+        width: 90%;
+      }
+
+      button {
+        padding: 0.8rem 1.4rem;
+        margin: 0.4rem;
       }
 
       .action-buttons {
         flex-direction: column;
+        gap: 0.6rem;
         align-items: center;
       }
 
       audio {
-        height: 48px;
+        width: 100%;
+        max-width: 100%;
+        height: 40px;
+        border-radius: 8px;
+        appearance: none;
       }
+
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      padding: 2rem;
+      font-family: "Noto Sans TC", sans-serif;
+      background: url('bg.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+      backdrop-filter: blur(10px) brightness(1.05);
     }
   </style>
 </head>
@@ -301,5 +304,4 @@
   </script>
   <script src="https://cdn.jsdelivr.net/gh/mattdiamond/Recorderjs@master/dist/recorder.js"></script>
 </body>
-
 </html>
