@@ -211,39 +211,25 @@
       codeDisplay.innerText = "識別碼：" + code;
     }
 
+    let recorder;
+    let audioContext;
+    let gumStream;
+
     startBtn.onclick = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream, {
-          mimeType: 'audio/webm;codecs=opus'
-        });
-        audioChunks = [];
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        gumStream = stream;
 
-        mediaRecorder.ondataavailable = event => {
-          audioChunks.push(event.data);
-        };
+        const input = audioContext.createMediaStreamSource(stream);
+        recorder = new Recorder(input, { numChannels: 1 });
 
-        mediaRecorder.onstop = () => {
-          audioBlob = new Blob(audioChunks, { type: "audio/webm" });
-          const audioURL = URL.createObjectURL(audioBlob);
-
-          const audio = document.getElementById("audioPlayback");
-          audio.src = audioURL;
-
-          audio.onloadedmetadata = () => {
-            statusText.innerText = "✅ 錄音完成，請確認後上傳";
-            redoBtn.disabled = false;
-            uploadBtn.disabled = false;
-          };
-        };
-
-        mediaRecorder.start();
+        recorder.record();
         statusText.innerText = "🎙️ 錄音中...";
         startBtn.disabled = true;
         stopBtn.disabled = false;
         redoBtn.disabled = true;
         uploadBtn.disabled = true;
-
       } catch (err) {
         console.error("錄音初始化錯誤", err);
         statusText.innerText = "⚠️ 錄音無法啟動，請檢查瀏覽器或麥克風權限。";
@@ -251,8 +237,17 @@
     };
 
     stopBtn.onclick = () => {
-      mediaRecorder.stop();
+      recorder.stop();
+      gumStream.getAudioTracks()[0].stop();
       stopBtn.disabled = true;
+
+      recorder.exportWAV(blob => {
+        audioBlob = blob;
+        audioPlayback.src = URL.createObjectURL(blob);
+        statusText.innerText = "✅ 錄音完成，請確認後上傳";
+        redoBtn.disabled = false;
+        uploadBtn.disabled = false;
+      });
     };
 
     redoBtn.onclick = () => {
@@ -309,6 +304,7 @@
 
     document.getElementById("toPlayback").href = `https://kps0980.wixsite.com/huayu-dryflower/record?code=${code}`;
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/recorder-js@1.0.3/src/recorder.js"></script>
 </body>
 
 </html>
