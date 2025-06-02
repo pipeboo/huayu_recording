@@ -134,10 +134,15 @@
       }
 
       audio {
-        margin-top: 1rem;
+        width: 100%;
+        max-width: 100%;
+        height: 40px;
+        border-radius: 8px;
+        appearance: none;
       }
 
     }
+
     body {
       display: flex;
       justify-content: center;
@@ -217,10 +222,17 @@
 
       mediaRecorder.onstop = () => {
         audioBlob = new Blob(audioChunks, { type: "audio/webm" });
-        audioPlayback.src = URL.createObjectURL(audioBlob);
-        redoBtn.disabled = false;
-        uploadBtn.disabled = false;
-        statusText.innerText = "✅ 錄音完成，請確認後上傳";
+        const audioURL = URL.createObjectURL(audioBlob);
+
+        const audio = document.getElementById("audioPlayback");
+        audio.src = audioURL;
+
+        audio.onloadedmetadata = () => {
+          audio.play();  // 可選：載入後自動預覽
+          statusText.innerText = "✅ 錄音完成，請確認後上傳";
+          redoBtn.disabled = false;
+          uploadBtn.disabled = false;
+        };
       };
 
       mediaRecorder.start();
@@ -271,7 +283,7 @@
       });
 
       const uploadResult = await uploadResp.json();
-      const audioUrl = uploadResult.secure_url;
+      const audioUrl = uploadResult.secure_url.replace("/upload/", "/upload/f_mp3/");
 
       await fetch("https://huayu-recording.vercel.app/api/updateWixRecording", {
         method: "POST",
