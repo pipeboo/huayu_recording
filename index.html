@@ -17,6 +17,8 @@
       background-size: cover;
       color: #333;
       backdrop-filter: blur(10px) brightness(1.05);
+      box-sizing: border-box;
+      overflow-x: hidden;
     }
 
     .container {
@@ -59,14 +61,15 @@
       font-size: 1.1rem;
       border-radius: 6px;
       border: 1px solid #ccc;
-      width: 80%;
+      width: 100%;
       max-width: 320px;
+      box-sizing: border-box;
     }
 
     button {
       padding: 0.8rem 1.6rem;
       font-size: 1.1rem;
-      margin: 0.4rem;
+      margin: 0.4rem 0.2rem;
       border: none;
       border-radius: 8px;
       background-color: #c6b3e6;
@@ -87,6 +90,8 @@
     audio {
       margin-top: 1.5rem;
       width: 100%;
+      height: 44px;
+      border-radius: 8px;
     }
 
     #status {
@@ -98,7 +103,9 @@
 
     .action-buttons {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
+      gap: 0.8rem;
       margin-top: 2rem;
     }
 
@@ -114,12 +121,8 @@
       color: #a18ac9;
     }
 
-    @media screen and (max-width: 768px) {
-      body {
-        padding: 1.5rem 1rem;
-        align-items: flex-start;
-      }
-
+    /* 手機尺寸優化 */
+    @media screen and (max-width: 480px) {
       .container {
         padding: 1.5rem 1rem;
         border-radius: 0.75rem;
@@ -134,24 +137,21 @@
       label,
       .link-btn,
       button {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
       }
 
       input[type="text"] {
-        font-size: 1.2rem;
-        width: 90%;
+        font-size: 1.1rem;
+        width: 100%;
       }
 
       .action-buttons {
         flex-direction: column;
-        gap: 0.6rem;
         align-items: center;
       }
 
       audio {
-        height: 40px;
-        border-radius: 8px;
-        appearance: none;
+        height: 48px;
       }
     }
   </style>
