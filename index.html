@@ -185,8 +185,20 @@
       }
 
       audio {
-        height: 60px;
-        /* iPhone/Safari 預設較高，看情況可以再微調 */
+        height: 32px;
+        /* 缩到 32px */
+        margin-top: 1rem;
+        /* 播放器上方空隙 */
+        margin-bottom: 1.2rem;
+        width: 100%;
+        border-radius: 8px;
+        appearance: none;
+      }
+
+      /* 状态文字再加点 margin-top，确保下面的文字不会紧贴播放器 */
+      #status {
+        margin-top: 1.2rem;
+        font-size: 1.1rem;
       }
     }
   </style>
