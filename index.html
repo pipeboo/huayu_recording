@@ -5,49 +5,87 @@
   <meta charset="UTF-8" />
   <title>語音卡片錄音</title>
   <style>
+    /*────────────────────────────────
+  ✅ 一段式的 body 宣告
+────────────────────────────────*/
     body {
-      min-height: 100vh;
-      /* 讓背景撐滿整個視窗高度 */
       font-family: "Noto Sans TC", sans-serif;
       margin: 0;
       padding: 2rem;
-      text-align: center;
+      min-height: 100vh;
+
+      /* Flex 置中，預設桌機與大螢幕用 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
       background: url('bg.png') no-repeat center center fixed;
       background-size: cover;
       color: #333;
       backdrop-filter: blur(10px) brightness(1.05);
+
+      box-sizing: border-box;
+      overflow-x: hidden;
     }
 
+    /*────────────────────────────────
+  ✅ 容器大框
+────────────────────────────────*/
     .container {
       background-color: rgba(255, 255, 255, 0.85);
+      width: 100%;
       max-width: 600px;
-      margin: auto;
       padding: 2rem;
       border-radius: 1rem;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+      text-align: center;
     }
 
+    /*────────────────────────────────
+  ✅  Logo、標題、說明…等
+────────────────────────────────*/
     .logo {
       width: 160px;
       margin-bottom: 1rem;
     }
 
     h1 {
-      font-size: 2rem;
+      font-size: 2.2rem;
       color: #5f4b8b;
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
     }
 
     #codeDisplay {
       margin-bottom: 1.5rem;
       font-weight: bold;
       color: #666;
+      font-size: 1.2rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #5f4b8b;
+      font-size: 1.1rem;
+    }
+
+    input[type="text"] {
+      padding: 0.6rem;
+      font-size: 1.1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 100%;
+      max-width: 320px;
+      box-sizing: border-box;
+      display: block;
+      margin: 0 auto;
     }
 
     button {
       padding: 0.8rem 1.6rem;
       font-size: 1.1rem;
-      margin: 0.4rem;
+      margin: 0.4rem 0.2rem;
       border: none;
       border-radius: 8px;
       background-color: #c6b3e6;
@@ -65,25 +103,40 @@
       cursor: not-allowed;
     }
 
+    /*────────────────────────────────
+  ✅ audio 播放器本體
+────────────────────────────────*/
     audio {
       margin-top: 1.5rem;
       width: 100%;
+      height: 44px;
+      /* 固定高度，避免 iOS/Safari 縮到看不見 */
+      border-radius: 8px;
     }
 
+    /*────────────────────────────────
+  ✅ 狀態文字
+────────────────────────────────*/
     #status {
       margin-top: 1rem;
       font-weight: bold;
+      font-size: 1.1rem;
       color: #444;
     }
 
+    /*────────────────────────────────
+  ✅ 連結按鈕們（回首頁、前往播放） 
+────────────────────────────────*/
     .action-buttons {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
+      gap: 0.8rem;
       margin-top: 2rem;
     }
 
     .link-btn {
-      font-size: 1rem;
+      font-size: 1.1rem;
       color: #5f4b8b;
       text-decoration: none;
       padding: 0.5rem 1rem;
@@ -94,13 +147,17 @@
       color: #a18ac9;
     }
 
-    @media screen and (max-width: 768px) {
+    /*────────────────────────────────
+    ✅ 手機（小於 480px）專屬修正 
+    ────────────────────────────────*/
+    @media screen and (max-width: 480px) {
       body {
+        /* 手機版就不要垂直置中，改成貼齊上方 */
+        align-items: center;
         padding: 1.5rem 1rem;
       }
 
       .container {
-        width: 100%;
         padding: 1.5rem 1rem;
         border-radius: 0.75rem;
       }
@@ -114,48 +171,23 @@
       label,
       .link-btn,
       button {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
       }
 
       input[type="text"] {
-        font-size: 1.2rem;
-        width: 90%;
-      }
-
-      button {
-        padding: 0.8rem 1.4rem;
-        margin: 0.4rem;
+        font-size: 1.1rem;
+        width: 100%;
       }
 
       .action-buttons {
         flex-direction: column;
-        gap: 0.6rem;
         align-items: center;
       }
 
       audio {
-        width: 100%;
-        max-width: 100%;
-        height: 40px;
-        border-radius: 8px;
-        appearance: none;
+        height: 60px;
+        /* iPhone/Safari 預設較高，看情況可以再微調 */
       }
-
-    }
-
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      min-height: 100vh;
-      margin: 0;
-      padding: 2rem;
-      font-family: "Noto Sans TC", sans-serif;
-      background: url('bg.png') no-repeat center center fixed;
-      background-size: cover;
-      color: #333;
-      backdrop-filter: blur(10px) brightness(1.05);
     }
   </style>
 </head>
@@ -304,4 +336,5 @@
   </script>
   <script src="https://cdn.jsdelivr.net/gh/mattdiamond/Recorderjs@master/dist/recorder.js"></script>
 </body>
+
 </html>
