@@ -212,35 +212,42 @@
     }
 
     startBtn.onclick = async () => {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorder = new MediaRecorder(stream);
-      audioChunks = [];
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream, {
+          mimeType: 'audio/webm;codecs=opus'
+        });
+        audioChunks = [];
 
-      mediaRecorder.ondataavailable = event => {
-        audioChunks.push(event.data);
-      };
-
-      mediaRecorder.onstop = () => {
-        audioBlob = new Blob(audioChunks, { type: "audio/webm" });
-        const audioURL = URL.createObjectURL(audioBlob);
-
-        const audio = document.getElementById("audioPlayback");
-        audio.src = audioURL;
-
-        audio.onloadedmetadata = () => {
-          audio.play();  // 可選：載入後自動預覽
-          statusText.innerText = "✅ 錄音完成，請確認後上傳";
-          redoBtn.disabled = false;
-          uploadBtn.disabled = false;
+        mediaRecorder.ondataavailable = event => {
+          audioChunks.push(event.data);
         };
-      };
 
-      mediaRecorder.start();
-      statusText.innerText = "🎙️ 錄音中...";
-      startBtn.disabled = true;
-      stopBtn.disabled = false;
-      redoBtn.disabled = true;
-      uploadBtn.disabled = true;
+        mediaRecorder.onstop = () => {
+          audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+          const audioURL = URL.createObjectURL(audioBlob);
+
+          const audio = document.getElementById("audioPlayback");
+          audio.src = audioURL;
+
+          audio.onloadedmetadata = () => {
+            statusText.innerText = "✅ 錄音完成，請確認後上傳";
+            redoBtn.disabled = false;
+            uploadBtn.disabled = false;
+          };
+        };
+
+        mediaRecorder.start();
+        statusText.innerText = "🎙️ 錄音中...";
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        redoBtn.disabled = true;
+        uploadBtn.disabled = true;
+
+      } catch (err) {
+        console.error("錄音初始化錯誤", err);
+        statusText.innerText = "⚠️ 錄音無法啟動，請檢查瀏覽器或麥克風權限。";
+      }
     };
 
     stopBtn.onclick = () => {
